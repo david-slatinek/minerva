@@ -4,13 +4,13 @@ locals {
   sg       = "${local.name}-sg"
 }
 
-data "aws_ami" "amazon_linux" {
+data "aws_ami" "debian" {
   most_recent = true
-  owners      = ["amazon"]
+  owners      = ["136693071363"]
 
   filter {
     name   = "name"
-    values = ["amzn2-ami-*-x86_64-gp2"]
+    values = ["debian-12-amd64-*"]
   }
 
   filter {
@@ -75,7 +75,7 @@ resource "aws_vpc_security_group_egress_rule" "allow_all_traffic_ipv4" {
 }
 
 resource "aws_instance" "api" {
-  ami                         = data.aws_ami.amazon_linux.id
+  ami                         = data.aws_ami.debian.id
   instance_type               = "t2.medium"
   associate_public_ip_address = true
   key_name                    = aws_key_pair.key_pair.key_name
