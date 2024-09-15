@@ -2,6 +2,7 @@ services:
   db:
     image: postgres:16.4-alpine3.20
     restart: always
+    hostname: minerva-db
     environment:
       - POSTGRES_USER=david
       - POSTGRES_PASSWORD=david
@@ -11,6 +12,13 @@ services:
     volumes:
       - data:/var/lib/postgresql/data
       - ./create.sql:/docker-entrypoint-initdb.d/create.sql
+    networks:
+      - minerva-network
 
 volumes:
   data:
+
+networks:
+  minerva-network:
+    name: minerva-network
+    driver: bridge

@@ -1,0 +1,16 @@
+services:
+  minerva-api:
+    build:
+      context: .
+      args:
+        file: config.docker
+    container_name: minerva-api
+    ports:
+      - "8080:8080"
+    networks:
+      - minerva-network
+
+networks:
+  minerva-network:
+    name: minerva-network
+    driver: bridge
