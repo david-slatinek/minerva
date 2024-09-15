@@ -1,0 +1,94 @@
+basePath: /api/v1
+consumes:
+- application/json
+definitions:
+  Error:
+    description: Error model
+    properties:
+      message:
+        type: string
+    type: object
+  Song:
+    description: Model for creating a new song
+    properties:
+      author:
+        type: string
+      duration:
+        type: string
+      release:
+        type: string
+      title:
+        type: string
+    required:
+    - author
+    - duration
+    - release
+    - title
+    type: object
+  SongDto:
+    description: Model for a created song
+    properties:
+      author:
+        type: string
+      duration:
+        type: string
+      id:
+        type: string
+      release:
+        type: string
+      title:
+        type: string
+    required:
+    - author
+    - duration
+    - release
+    - title
+    type: object
+host: localhost:8080
+info:
+  contact:
+    name: David Slatinek
+    url: https://github.com/david-slatinek
+  description: API for song management
+  license:
+    name: Apache-2.0 license
+    url: https://www.apache.org/licenses/LICENSE-2.0
+  termsOfService: http://swagger.io/terms/
+  title: Song API
+  version: "1.0"
+paths:
+  /song:
+    post:
+      consumes:
+      - application/json
+      description: Create a new song.
+      parameters:
+      - description: Song info
+        in: body
+        name: requestBody
+        required: true
+        schema:
+          $ref: '#/definitions/Song'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/SongDto'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/Error'
+      summary: Create a new song
+      tags:
+      - song
+produces:
+- application/json
+schemes:
+- http
+swagger: "2.0"
