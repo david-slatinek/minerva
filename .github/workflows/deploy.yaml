@@ -2,8 +2,7 @@ name: Deploy API
 
 on:
   push:
-    tags:
-      - "v[0-9]+.[0-9]+.[0-9]+"
+    tags: [ "v[0-9].[0-9].[0-9]" ]
 
 jobs:
   build:
@@ -20,7 +19,7 @@ jobs:
         uses: actions/setup-go@v5
         with:
           go-version: "1.23.1"
-        run: |
+      - run: |
           go mod download -x
           go build -v main.go
 
