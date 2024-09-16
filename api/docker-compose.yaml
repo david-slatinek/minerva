@@ -1,0 +1,6 @@
+services:
+  minerva-api:
+    image: {{ image }}
+    container_name: minerva-api
+    ports:
+      - "80:8080"

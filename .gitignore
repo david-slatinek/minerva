@@ -5,3 +5,4 @@ terraform.tfstate.backup
 .idea
 inventory.yaml
 config.prod.yaml
+secrets.yaml
