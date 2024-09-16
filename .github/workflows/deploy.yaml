@@ -87,7 +87,7 @@ jobs:
         env:
           KEY: ${{ secrets.KEY }}
           HOST: ${{ secrets.HOST }}
-          REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          REGISTRY: ${{ secrets.REGISTRY }}
         run: |
           sudo apt update
           sudo apt install -y ansible
@@ -96,7 +96,7 @@ jobs:
           chmod 600 key.pem
           
           echo "repository: $REGISTRY" > secrets.yaml
-          echo "tag: ${{  github.ref_name }}" >> secrets.yaml
+          echo "tag: ${{ github.ref_name }}" >> secrets.yaml
           
           cat > inventory.yaml <<- EOF
           all:
