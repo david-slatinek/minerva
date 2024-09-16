@@ -92,6 +92,7 @@ jobs:
           sudo apt install -y ansible
           
           echo "$KEY" > key.pem
+          chmod 600 key.pem
           
           cat > inventory.yaml <<- EOF
           all:
