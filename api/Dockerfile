@@ -13,12 +13,12 @@ FROM alpine:3.20
 
 WORKDIR /api
 
-ARG file
+ARG FILE
 
 COPY --from=build /api/main ./
 RUN mkdir config
-COPY --from=build /api/config/${file}.yaml ./config
+COPY --from=build /api/config/${FILE}.yaml ./config
 
-ENV file ${file}
+ENV file=${FILE}
 
-CMD ./main -file ${file}
+CMD ["sh", "-c", "./main -file ${file}"]

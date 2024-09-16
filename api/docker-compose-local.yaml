@@ -3,7 +3,7 @@ services:
     build:
       context: .
       args:
-        file: config.docker
+        FILE: config.docker
     container_name: minerva-api
     ports:
       - "8080:8080"
