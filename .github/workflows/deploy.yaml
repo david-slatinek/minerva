@@ -62,10 +62,10 @@ jobs:
           echo "mode: release" >> config/config.prod.yaml
           
           docker build -t $REGISTRY/$REPOSITORY:latest --build-arg FILE=config.prod .
-          docker image tag $REGISTRY/$REPOSITORY:latest $REGISTRY/$REPOSITORY:${{  github.ref_name }}
+          docker image tag $REGISTRY/$REPOSITORY:latest $REGISTRY/$REPOSITORY:${{ github.ref_name }}
           
           docker push $REGISTRY/$REPOSITORY:latest
-          docker push $REGISTRY/$REPOSITORY:${{  github.ref_name }}
+          docker push $REGISTRY/$REPOSITORY:${{ github.ref_name }}
           
           rm config/config.prod.yaml
 
