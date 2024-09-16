@@ -45,8 +45,8 @@ jobs:
         env:
           CONNECTION_STRING: ${{ secrets.CONNECTION_STRING }}
         run: |
-          echo "connection-string: $CONNECTION_STRING" > config.prod.yaml
-          echo "mode: release" >> config.prod.yaml
+          echo "connection-string: $CONNECTION_STRING" > config/config.prod.yaml
+          echo "mode: release" >> config/config.prod.yaml
           docker build -t minerva:latest --build-arg FILE=config.prod .
           docker image tag minerva:latest minerva:${{  github.ref_name }}
 
