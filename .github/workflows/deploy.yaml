@@ -2,8 +2,7 @@ name: Deploy API
 
 on:
   push:
-    tags:
-      - "v[0-9]+.[0-9]+.[0-9]+"
+    tags: [ "v[0-9].[0-9].[0-9]" ]
 
 jobs:
   build:
@@ -15,7 +14,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-
       - name: Build
         uses: actions/setup-go@v5
         with:
@@ -34,7 +32,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-
       - name: Build
         run: |
           docker build -t minerva:latest --build-arg FILE=config.prod .
@@ -50,7 +47,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
