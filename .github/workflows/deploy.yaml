@@ -94,7 +94,7 @@ jobs:
           KEY: ${{ secrets.KEY }}
           HOST: ${{ secrets.HOST }}
         run: |
-          pip install ansible
+          pipx install ansible-core
           
           echo "$KEY" > key.pem
           
