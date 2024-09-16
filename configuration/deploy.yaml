@@ -1,0 +1,28 @@
+---
+# Playbook to deploy api
+
+- name: Deploy API
+  hosts: all
+
+  vars_files:
+    - secrets.yaml
+
+  vars:
+    path: minerva
+    image: "{{ repository }}/{{ path }}:{{ tag }}"
+
+  tasks:
+    - name: Template docker compose
+      ansible.builtin.template:
+        src: "{{ playbook_dir }}/../api/docker-compose.yaml"
+        dest: "{{ path }}/"
+        mode: preserve
+
+    - name: Tear down API
+      community.docker.docker_compose_v2:
+        project_src: "{{ path }}"
+        state: absent
+
+    - name: Create and start services
+      community.docker.docker_compose_v2:
+        project_src: "{{ path }}"

@@ -4,6 +4,12 @@
 - name: Install required packages
   hosts: all
 
+  vars:
+    path: "/home/{{ ansible_user }}"
+
+  vars_files:
+    - secrets.yaml
+
   tasks:
     - name: Update
       become: true
@@ -24,10 +30,12 @@
           - curl
           - gnupg
           - software-properties-common
+          - python3-venv
+          - unzip
         state: present
         update_cache: true
 
-    - name: Add Docker Module Repository
+    - name: Add Docker module repository
       become: true
       ansible.builtin.deb822_repository:
         name: docker
@@ -72,3 +80,42 @@
       loop:
         - docker.service
         - containerd.service
+
+    - name: Download AWS CLI
+      ansible.builtin.get_url:
+        url: https://s3.amazonaws.com/aws-cli/awscli-bundle.zip
+        dest: "{{ path }}/cli.zip"
+        mode: "0440"
+
+    - name: Unarchive the installer
+      ansible.builtin.unarchive:
+        src: "{{ path }}/cli.zip"
+        dest: "{{ path }}"
+        remote_src: true
+
+    - name: Install CLI
+      become: true
+      ansible.builtin.command: python3 ./awscli-bundle/install -i /usr/local/aws -b /usr/local/bin/aws
+      changed_when: true
+
+    - name: Configure CLI
+      no_log: true
+      ansible.builtin.command: aws configure set "{{ item.key }}" "{{ item.value }}"
+      loop:
+        - { key: "aws_access_key_id", value: "{{ access_key }}" }
+        - { key: "aws_secret_access_key", value: "{{ secret_key }}" }
+        - { key: "region", value: eu-central-1 }
+      changed_when: true
+
+    - name: Login to ECR
+      ansible.builtin.shell:
+        cmd: aws ecr get-login-password | docker login --username AWS --password-stdin "{{ repository }}"
+      changed_when: true
+
+    - name: Delete files
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: absent
+      loop:
+        - cli.zip
+        - awscli-bundle
