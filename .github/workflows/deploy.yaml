@@ -22,6 +22,7 @@ jobs:
         uses: actions/setup-go@v5
         with:
           go-version: "1.23.1"
+          cache-dependency-path: api/go.sum
       - run: |
           go mod download -x
           go build -v main.go
@@ -41,7 +42,11 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Build
+        env:
+          CONNECTION_STRING: ${{ secrets.CONNECTION_STRING }}
         run: |
+          echo "connection-string: $CONNECTION_STRING" > config.prod.yaml
+          echo "mode: release" >> config.prod.yaml
           docker build -t minerva:latest --build-arg FILE=config.prod .
           docker image tag minerva:latest minerva:${{  github.ref_name }}
 
