@@ -58,6 +58,26 @@ info:
   version: "1.0"
 paths:
   /songs:
+    get:
+      description: Get all songs.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: An array of songs
+          schema:
+            items:
+              $ref: '#/definitions/SongDto'
+            type: array
+        "204":
+          description: No Content
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/Error'
+      summary: Get all songs
+      tags:
+      - song
     post:
       consumes:
       - application/json
@@ -89,8 +109,6 @@ paths:
       - song
   /songs/{id}:
     get:
-      consumes:
-      - application/json
       description: Get a song by id.
       parameters:
       - description: Song ID

@@ -35,3 +35,12 @@ func (receiver Song) GetById(id string) (*models.SongDto, error) {
 	}
 	return &song, nil
 }
+
+func (receiver Song) GetAll() (*[]models.SongDto, error) {
+	var songs []models.SongDto
+	err := receiver.database.Find(&songs).Error
+	if err != nil {
+		return nil, err
+	}
+	return &songs, err
+}

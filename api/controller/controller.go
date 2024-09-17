@@ -50,7 +50,6 @@ func (receiver Song) Create(c *gin.Context) {
 //
 //	@Description	Get a song by id.
 //	@Summary		Get a song by id
-//	@Accept			json
 //	@Produce		json
 //	@Tags			song
 //	@Param			id	path		string	true	"Song ID"
@@ -68,4 +67,29 @@ func (receiver Song) GetById(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, songDto)
+}
+
+// GetAll godoc
+//
+//	@Description	Get all songs.
+//	@Summary		Get all songs
+//	@Produce		json
+//	@Tags			song
+//	@Success		200	{object}	[]models.SongDto	"An array of songs"
+//	@Success		204	"No Content"
+//	@Failure		500	{object}	models.Error
+//	@Router			/songs [GET]
+func (receiver Song) GetAll(c *gin.Context) {
+	songs, err := receiver.db.GetAll()
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusInternalServerError, models.Error{Message: err.Error()})
+		return
+	}
+
+	if len(*songs) == 0 {
+		c.Status(http.StatusNoContent)
+		return
+	}
+
+	c.JSON(http.StatusOK, songs)
 }

@@ -69,6 +69,7 @@ func main() {
 	{
 		baseGroup.POST("/songs", songController.Create)
 		baseGroup.GET("/songs/:id", songController.GetById)
+		baseGroup.GET("/songs", songController.GetAll)
 	}
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 

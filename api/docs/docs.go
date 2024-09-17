@@ -30,6 +30,36 @@ const docTemplate = `{
     "basePath": "{{.BasePath}}",
     "paths": {
         "/songs": {
+            "get": {
+                "description": "Get all songs.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "song"
+                ],
+                "summary": "Get all songs",
+                "responses": {
+                    "200": {
+                        "description": "An array of songs",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/SongDto"
+                            }
+                        }
+                    },
+                    "204": {
+                        "description": "No Content"
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            },
             "post": {
                 "description": "Create a new song.",
                 "consumes": [
@@ -78,9 +108,6 @@ const docTemplate = `{
         "/songs/{id}": {
             "get": {
                 "description": "Get a song by id.",
-                "consumes": [
-                    "application/json"
-                ],
                 "produces": [
                     "application/json"
                 ],
