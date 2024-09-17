@@ -53,3 +53,12 @@ func (receiver Song) Update(dto models.SongDto) error {
 	}
 	return receiver.database.Save(&dto).Error
 }
+
+func (receiver Song) Delete(id string) error {
+	_, err := receiver.GetById(id)
+	if err != nil {
+		return fmt.Errorf("song with id = '%s' was not found", id)
+	}
+
+	return receiver.database.Delete(&models.SongDto{}, "id = ?", id).Error
+}

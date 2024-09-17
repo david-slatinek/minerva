@@ -108,6 +108,30 @@ paths:
       tags:
       - song
   /songs/{id}:
+    delete:
+      description: Delete song.
+      parameters:
+      - description: Song ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/Error'
+      summary: Delete song
+      tags:
+      - song
     get:
       description: Get a song by id.
       parameters:

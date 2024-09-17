@@ -134,3 +134,26 @@ func (receiver Song) Update(c *gin.Context) {
 
 	c.JSON(http.StatusOK, song)
 }
+
+// Delete godoc
+//
+//	@Description	Delete song.
+//	@Summary		Delete song
+//	@Produce		json
+//	@Tags			song
+//	@Param			id	path	string	true	"Song ID"
+//	@Success		204	"No Content"
+//	@Failure		400	{object}	models.Error
+//	@Failure		500	{object}	models.Error
+//	@Router			/songs/{id} [DELETE]
+func (receiver Song) Delete(c *gin.Context) {
+	id := c.Param("id")
+
+	err := receiver.db.Delete(id)
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusBadRequest, models.Error{Message: err.Error()})
+		return
+	}
+
+	c.Status(http.StatusNoContent)
+}
