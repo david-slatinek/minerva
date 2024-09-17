@@ -1,6 +1,7 @@
 package database
 
 import (
+	"fmt"
 	"github.com/google/uuid"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -43,4 +44,12 @@ func (receiver Song) GetAll() (*[]models.SongDto, error) {
 		return nil, err
 	}
 	return &songs, err
+}
+
+func (receiver Song) Update(dto models.SongDto) error {
+	_, err := receiver.GetById(dto.Id)
+	if err != nil {
+		return fmt.Errorf("song with id = '%s' was not found", dto.Id)
+	}
+	return receiver.database.Save(&dto).Error
 }

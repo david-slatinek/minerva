@@ -134,6 +134,40 @@ paths:
       summary: Get a song by id
       tags:
       - song
+    put:
+      consumes:
+      - application/json
+      description: Update song.
+      parameters:
+      - description: Song ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Updated song
+        in: body
+        name: requestBody
+        required: true
+        schema:
+          $ref: '#/definitions/Song'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/SongDto'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/Error'
+      summary: Update song
+      tags:
+      - song
 produces:
 - application/json
 schemes:

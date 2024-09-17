@@ -93,3 +93,44 @@ func (receiver Song) GetAll(c *gin.Context) {
 
 	c.JSON(http.StatusOK, songs)
 }
+
+// Update godoc
+//
+//	@Description	Update song.
+//	@Summary		Update song
+//	@Accept			json
+//	@Produce		json
+//	@Tags			song
+//	@Param			id			path		string		true	"Song ID"
+//	@Param			requestBody	body		models.Song	true	"Updated song"
+//	@Success		200			{object}	models.SongDto
+//	@Failure		400			{object}	models.Error
+//	@Failure		500			{object}	models.Error
+//	@Router			/songs/{id} [PUT]
+func (receiver Song) Update(c *gin.Context) {
+	id := c.Param("id")
+
+	var req models.Song
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.AbortWithStatusJSON(http.StatusBadRequest, models.Error{Message: err.Error()})
+		return
+	}
+
+	song := models.SongDto{
+		Id: id,
+		Song: models.Song{
+			Title:    req.Title,
+			Duration: req.Duration,
+			Release:  req.Release,
+			Author:   req.Author,
+		},
+	}
+
+	err := receiver.db.Update(song)
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusBadRequest, models.Error{Message: err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, song)
+}
