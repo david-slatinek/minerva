@@ -60,7 +60,6 @@ jobs:
         run: |
           echo "connection-string: $CONNECTION_STRING" > config/config.prod.yaml
           echo "mode: release" >> config/config.prod.yaml
-          cat config/config.prod.yaml
           
           docker build -t $REGISTRY/$REPOSITORY:latest --build-arg FILE=config.prod .
           docker image tag $REGISTRY/$REPOSITORY:latest $REGISTRY/$REPOSITORY:${{ github.ref_name }}
