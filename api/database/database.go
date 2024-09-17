@@ -26,3 +26,12 @@ func (receiver Song) Create(song models.Song) (models.SongDto, error) {
 	}
 	return sDto, receiver.database.Create(&sDto).Error
 }
+
+func (receiver Song) GetById(id string) (*models.SongDto, error) {
+	song := models.SongDto{}
+	err := receiver.database.First(&song, "id = ?", id).Error
+	if err != nil {
+		return nil, err
+	}
+	return &song, nil
+}

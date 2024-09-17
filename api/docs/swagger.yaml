@@ -57,7 +57,7 @@ info:
   title: Song API
   version: "1.0"
 paths:
-  /song:
+  /songs:
     post:
       consumes:
       - application/json
@@ -85,6 +85,35 @@ paths:
           schema:
             $ref: '#/definitions/Error'
       summary: Create a new song
+      tags:
+      - song
+  /songs/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Get a song by id.
+      parameters:
+      - description: Song ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/SongDto'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/Error'
+      summary: Get a song by id
       tags:
       - song
 produces:
