@@ -4,6 +4,7 @@ import (
 	"github.com/pkg/errors"
 	"github.com/spf13/viper"
 	"log"
+	"os"
 )
 
 type Config struct {
@@ -19,12 +20,22 @@ func NewConfig(filename string) (*Config, error) {
 		return nil, err
 	}
 
+	cfg.loadEnv()
+
 	err = cfg.validate()
 	if err != nil {
 		return nil, err
 	}
 
 	return cfg, nil
+}
+
+func (receiver *Config) loadEnv() {
+	connectionString := os.Getenv("CONNECTION_STRING")
+	if connectionString != "" {
+		log.Println("using CONNECTION_STRING")
+		receiver.ConnectionString = connectionString
+	}
 }
 
 func (receiver *Config) loadConfig(filename string) error {
