@@ -58,7 +58,7 @@ jobs:
           REPOSITORY: minerva
           CONNECTION_STRING: ${{ secrets.CONNECTION_STRING }}
         run: |
-          echo "mode: release" >> config/config.prod.yaml
+          echo "mode: release" >> config/config.docker.yaml
           
           docker build -t $REGISTRY/$REPOSITORY:latest --build-arg FILE=config.docker .
           docker image tag $REGISTRY/$REPOSITORY:latest $REGISTRY/$REPOSITORY:${{ github.ref_name }}

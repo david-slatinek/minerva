@@ -14,17 +14,14 @@
     image: "{{ repository }}/{{ basepath }}:{{ tag }}"
 
   tasks:
-    - name: Copy db docker compose
+    - name: Copy db files
       ansible.builtin.copy:
-        src: "{{ playbook_dir }}/../api/database/docker-compose.yaml"
+        src: "{{ playbook_dir }}/../api/{{ item }}"
         dest: "{{ database }}/"
         mode: preserve
-
-    - name: Copy db config
-      ansible.builtin.copy:
-        src: "{{ playbook_dir }}/../api/config/config.docker.yaml"
-        dest: "{{ database }}/"
-        mode: preserve
+      loop:
+        - "database/docker-compose.yaml"
+        - "database/create.sql"
 
     - name: Template docker compose
       ansible.builtin.template:
