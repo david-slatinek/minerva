@@ -1,2 +1,1 @@
 connection-string: host=minerva-db user=david password=david dbname=minerva port=5432 sslmode=disable TimeZone=Europe/Ljubljana
-mode: debug

@@ -4,3 +4,10 @@ services:
     container_name: minerva-api
     ports:
       - "80:8080"
+    networks:
+      - minerva-network
+
+networks:
+  minerva-network:
+    name: minerva-network
+    driver: bridge

@@ -8,21 +8,44 @@
     - secrets.yaml
 
   vars:
-    path: minerva
-    image: "{{ repository }}/{{ path }}:{{ tag }}"
+    basepath: minerva
+    api: "{{ basepath }}/api"
+    database: "{{ basepath }}/database"
+    image: "{{ repository }}/{{ basepath }}:{{ tag }}"
 
   tasks:
+    - name: Copy db docker compose
+      ansible.builtin.copy:
+        src: "{{ playbook_dir }}/../api/database/docker-compose.yaml"
+        dest: "{{ database }}/"
+        mode: preserve
+
+    - name: Copy db config
+      ansible.builtin.copy:
+        src: "{{ playbook_dir }}/../api/config/config.docker.yaml"
+        dest: "{{ database }}/"
+        mode: preserve
+
     - name: Template docker compose
       ansible.builtin.template:
         src: "{{ playbook_dir }}/../api/docker-compose.yaml"
-        dest: "{{ path }}/"
+        dest: "{{ api }}/"
         mode: preserve
+
+    - name: Tear down db
+      community.docker.docker_compose_v2:
+        project_src: "{{ database }}"
+        state: absent
+
+    - name: Create and start db service
+      community.docker.docker_compose_v2:
+        project_src: "{{ database }}"
 
     - name: Tear down API
       community.docker.docker_compose_v2:
-        project_src: "{{ path }}"
+        project_src: "{{ api }}"
         state: absent
 
-    - name: Create and start services
+    - name: Create and start API service
       community.docker.docker_compose_v2:
-        project_src: "{{ path }}"
+        project_src: "{{ api }}"
