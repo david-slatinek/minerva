@@ -37,7 +37,6 @@ var configFileFlag = flag.String("file", "config.local", "config file name")
 //	@license.name	Apache-2.0 license
 //	@license.url	https://www.apache.org/licenses/LICENSE-2.0
 
-// @host		localhost:8080
 // @BasePath	/api/v1
 func main() {
 	flag.Parse()

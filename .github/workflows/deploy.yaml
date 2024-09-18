@@ -56,7 +56,6 @@ jobs:
         env:
           REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           REPOSITORY: minerva
-          CONNECTION_STRING: ${{ secrets.CONNECTION_STRING }}
         run: |
           echo "mode: release" >> config/config.docker.yaml
           
