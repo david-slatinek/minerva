@@ -72,6 +72,14 @@ func main() {
 		baseGroup.PUT("/songs/:id", songController.Update)
 		baseGroup.DELETE("/songs/:id", songController.Delete)
 	}
+	router.GET("/health", func(c *gin.Context) {
+		if err := db.Ping(); err != nil {
+			c.JSON(http.StatusInternalServerError, models.Error{Message: "can't connect to database"})
+			return
+		}
+		c.JSON(http.StatusOK, gin.H{"status": "ok"})
+	})
+
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	srv := &http.Server{

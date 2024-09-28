@@ -1,11 +1,13 @@
 package database
 
 import (
+	"context"
 	"fmt"
 	"github.com/google/uuid"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"main/models"
+	"time"
 )
 
 type Song struct {
@@ -61,4 +63,16 @@ func (receiver Song) Delete(id string) error {
 	}
 
 	return receiver.database.Delete(&models.SongDto{}, "id = ?", id).Error
+}
+
+func (receiver Song) Ping() error {
+	db, err := receiver.database.DB()
+	if err != nil {
+		return err
+	}
+
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	defer cancel()
+
+	return db.PingContext(ctx)
 }
