@@ -1,0 +1,27 @@
+---
+# Playbook to setup monitoring
+
+- name: Setup monitoring
+  hosts: all
+
+  vars:
+    path: "/home/{{ ansible_user }}/monitoring"
+
+  tasks:
+    - name: Copy monitoring files
+      ansible.builtin.copy:
+        src: "{{ playbook_dir }}/../monitoring/{{ item }}"
+        dest: "{{ path }}/"
+        mode: preserve
+      loop:
+        - "docker-compose.yaml"
+        - ".env"
+
+    - name: Tear down monitoring
+      community.docker.docker_compose_v2:
+        project_src: "{{ path }}"
+        state: absent
+
+    - name: Create and start monitoring
+      community.docker.docker_compose_v2:
+        project_src: "{{ path }}"

@@ -90,6 +90,20 @@ resource "aws_vpc_security_group_ingress_rule" "allow_postgres" {
   }
 }
 
+resource "aws_vpc_security_group_ingress_rule" "allow_netdata" {
+  security_group_id = aws_security_group.security_group.id
+  cidr_ipv4         = "0.0.0.0/0"
+  from_port         = 19999
+  ip_protocol       = "tcp"
+  to_port           = 19999
+
+  tags = {
+    Name        = "${local.name}-netdata"
+    Protocol    = "netdata"
+    Environment = var.env
+  }
+}
+
 resource "aws_vpc_security_group_egress_rule" "allow_all_traffic_ipv4" {
   security_group_id = aws_security_group.security_group.id
   cidr_ipv4         = "0.0.0.0/0"
