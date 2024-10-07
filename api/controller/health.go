@@ -3,17 +3,20 @@ package controller
 import (
 	"github.com/gin-gonic/gin"
 	"main/database"
+	"main/logging"
 	"main/models"
 	"net/http"
 )
 
 type Health struct {
-	db *database.Song
+	db     *database.Song
+	logger *logging.Logging
 }
 
-func NewHealth(db *database.Song) *Health {
+func NewHealth(db *database.Song, logger *logging.Logging) *Health {
 	return &Health{
-		db: db,
+		db:     db,
+		logger: logger,
 	}
 }
 
@@ -28,6 +31,8 @@ func NewHealth(db *database.Song) *Health {
 //	@Router			/health [GET]
 func (receiver Health) Check(c *gin.Context) {
 	if err := receiver.db.Ping(); err != nil {
+		receiver.logger.Set(c, logging.Error, http.StatusInternalServerError, err.Error())
+
 		c.JSON(http.StatusInternalServerError, models.Health{Healthy: false})
 		return
 	}

@@ -8,9 +8,9 @@ services:
     ports:
       - "8080:8080"
     networks:
-      - minerva-network
+      - minerva
 
 networks:
-  minerva-network:
-    name: minerva-network
+  minerva:
+    name: minerva
     driver: bridge

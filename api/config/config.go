@@ -8,8 +8,9 @@ import (
 )
 
 type Config struct {
-	ConnectionString string `mapstructure:"connection-string"`
-	Mode             string `mapstructure:"mode"`
+	ConnectionString  string `mapstructure:"connection-string"`
+	Mode              string `mapstructure:"mode"`
+	ElasticsearchHost string `mapstructure:"elasticsearch-host"`
 }
 
 func NewConfig(filename string) (*Config, error) {

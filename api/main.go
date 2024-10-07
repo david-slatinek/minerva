@@ -12,6 +12,7 @@ import (
 	"main/controller"
 	"main/database"
 	_ "main/docs"
+	"main/logging"
 	"main/models"
 	"net/http"
 	"os"
@@ -51,8 +52,6 @@ func main() {
 		log.Fatalf("error connecting to database: %v", err)
 	}
 
-	songController := controller.NewSong(db)
-
 	gin.SetMode(cfg.Mode)
 
 	router := gin.Default()
@@ -64,6 +63,15 @@ func main() {
 		c.JSON(http.StatusMethodNotAllowed, models.Error{Message: "method not allowed"})
 	})
 
+	logger, err := logging.New(cfg.ElasticsearchHost)
+	if err == nil {
+		router.Use(logger.Start, logger.End)
+	} else {
+		log.Fatalf("error setting logger: %v", err)
+	}
+
+	songController := controller.NewSong(db, logger)
+
 	baseGroup := router.Group("api/v1")
 	{
 		baseGroup.POST("/songs", songController.Create)
@@ -72,7 +80,7 @@ func main() {
 		baseGroup.PUT("/songs/:id", songController.Update)
 		baseGroup.DELETE("/songs/:id", songController.Delete)
 	}
-	router.GET("/health", controller.NewHealth(db).Check)
+	router.GET("/health", controller.NewHealth(db, logger).Check)
 
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 

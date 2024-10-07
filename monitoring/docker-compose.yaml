@@ -72,6 +72,8 @@ services:
         condition: service_healthy
     networks:
       - minerva
+    volumes:
+      - kibana:/usr/share/kibana/data
     ports:
       - "5601:5601"
     environment:
@@ -89,3 +91,6 @@ volumes:
     name: netdatalib
   netdatacache:
     name: netdatacache
+
+  kibana:
+    name: kibana
