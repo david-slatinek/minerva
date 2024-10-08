@@ -1,3 +1,4 @@
 connection-string: host=localhost user=david password=david dbname=minerva port=5432 sslmode=disable TimeZone=Europe/Ljubljana
 mode: debug
 elasticsearch-host: http://localhost:9200
+enable-logging: true

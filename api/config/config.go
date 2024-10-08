@@ -5,12 +5,14 @@ import (
 	"github.com/spf13/viper"
 	"log"
 	"os"
+	"strings"
 )
 
 type Config struct {
 	ConnectionString  string `mapstructure:"connection-string"`
 	Mode              string `mapstructure:"mode"`
 	ElasticsearchHost string `mapstructure:"elasticsearch-host"`
+	EnableLogging     bool   `mapstructure:"enable-logging"`
 }
 
 func NewConfig(filename string) (*Config, error) {
@@ -36,6 +38,12 @@ func (receiver *Config) loadEnv() {
 	if connectionString != "" {
 		log.Println("using CONNECTION_STRING")
 		receiver.ConnectionString = connectionString
+	}
+
+	enableLogging := os.Getenv("ENABLE_LOGGING")
+	if enableLogging != "" {
+		log.Println("using ENABLE_LOGGING")
+		receiver.EnableLogging = strings.ToLower(enableLogging) == "true"
 	}
 }
 

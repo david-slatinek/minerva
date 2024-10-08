@@ -63,14 +63,19 @@ func main() {
 		c.JSON(http.StatusMethodNotAllowed, models.Error{Message: "method not allowed"})
 	})
 
-	logger, err := logging.New(cfg.ElasticsearchHost)
-	if err == nil {
-		router.Use(logger.Start, logger.End)
+	if cfg.EnableLogging {
+		logger, err := logging.New(cfg.ElasticsearchHost)
+
+		if err == nil {
+			router.Use(logger.Start, logger.End)
+		} else {
+			log.Printf("error setting logger: %v", err)
+		}
 	} else {
-		log.Fatalf("error setting logger: %v", err)
+		log.Println("skipping logging")
 	}
 
-	songController := controller.NewSong(db, logger)
+	songController := controller.NewSong(db)
 
 	baseGroup := router.Group("api/v1")
 	{
@@ -80,7 +85,7 @@ func main() {
 		baseGroup.PUT("/songs/:id", songController.Update)
 		baseGroup.DELETE("/songs/:id", songController.Delete)
 	}
-	router.GET("/health", controller.NewHealth(db, logger).Check)
+	router.GET("/health", controller.NewHealth(db).Check)
 
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 

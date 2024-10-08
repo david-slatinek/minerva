@@ -11,7 +11,7 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - data:/var/lib/postgresql/data
+      - minerva-db:/var/lib/postgresql/data
       - ./create.sql:/docker-entrypoint-initdb.d/create.sql
     networks:
       - minerva
@@ -23,7 +23,8 @@ services:
       start_period: 10s
 
 volumes:
-  data:
+  minerva-db:
+    name: minerva-db
 
 networks:
   minerva:

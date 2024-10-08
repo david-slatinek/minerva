@@ -9,6 +9,8 @@ services:
       - "8080:8080"
     networks:
       - minerva
+    environment:
+      ENABLE_LOGGING: $ENABLE_LOGGING
 
 networks:
   minerva:

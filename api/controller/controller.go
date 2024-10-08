@@ -10,14 +10,12 @@ import (
 )
 
 type Song struct {
-	db     *database.Song
-	logger *logging.Logging
+	db *database.Song
 }
 
-func NewSong(db *database.Song, logger *logging.Logging) *Song {
+func NewSong(db *database.Song) *Song {
 	return &Song{
-		db:     db,
-		logger: logger,
+		db: db,
 	}
 }
 
@@ -36,19 +34,19 @@ func NewSong(db *database.Song, logger *logging.Logging) *Song {
 func (receiver Song) Create(c *gin.Context) {
 	var req models.Song
 	if err := c.ShouldBindJSON(&req); err != nil {
-		receiver.logger.Set(c, logging.Error, http.StatusBadRequest, err.Error())
+		set(c, logging.Error, http.StatusBadRequest, err.Error())
 		c.AbortWithStatusJSON(http.StatusBadRequest, models.Error{Message: err.Error()})
 		return
 	}
 
 	songDto, err := receiver.db.Create(req)
 	if err != nil {
-		receiver.logger.Set(c, logging.Error, http.StatusBadRequest, err.Error())
+		set(c, logging.Error, http.StatusBadRequest, err.Error())
 		c.AbortWithStatusJSON(http.StatusBadRequest, models.Error{Message: err.Error()})
 		return
 	}
 
-	receiver.logger.Set(c, logging.Info, http.StatusOK, "")
+	set(c, logging.Info, http.StatusOK, "")
 	c.JSON(http.StatusOK, songDto)
 }
 
@@ -69,12 +67,12 @@ func (receiver Song) GetById(c *gin.Context) {
 	songDto, err := receiver.db.GetById(id)
 	if err != nil {
 		message := fmt.Sprintf("song with id = '%s' was not found", id)
-		receiver.logger.Set(c, logging.Error, http.StatusBadRequest, message)
+		set(c, logging.Error, http.StatusBadRequest, message)
 		c.AbortWithStatusJSON(http.StatusBadRequest, models.Error{Message: message})
 		return
 	}
 
-	receiver.logger.Set(c, logging.Info, http.StatusOK, "")
+	set(c, logging.Info, http.StatusOK, "")
 	c.JSON(http.StatusOK, songDto)
 }
 
@@ -91,18 +89,18 @@ func (receiver Song) GetById(c *gin.Context) {
 func (receiver Song) GetAll(c *gin.Context) {
 	songs, err := receiver.db.GetAll()
 	if err != nil {
-		receiver.logger.Set(c, logging.Error, http.StatusInternalServerError, err.Error())
+		set(c, logging.Error, http.StatusInternalServerError, err.Error())
 		c.AbortWithStatusJSON(http.StatusInternalServerError, models.Error{Message: err.Error()})
 		return
 	}
 
 	if len(*songs) == 0 {
-		receiver.logger.Set(c, logging.Info, http.StatusNoContent, "")
+		set(c, logging.Info, http.StatusNoContent, "")
 		c.Status(http.StatusNoContent)
 		return
 	}
 
-	receiver.logger.Set(c, logging.Info, http.StatusOK, "")
+	set(c, logging.Info, http.StatusOK, "")
 	c.JSON(http.StatusOK, songs)
 }
 
@@ -124,7 +122,7 @@ func (receiver Song) Update(c *gin.Context) {
 
 	var req models.Song
 	if err := c.ShouldBindJSON(&req); err != nil {
-		receiver.logger.Set(c, logging.Error, http.StatusBadRequest, err.Error())
+		set(c, logging.Error, http.StatusBadRequest, err.Error())
 		c.AbortWithStatusJSON(http.StatusBadRequest, models.Error{Message: err.Error()})
 		return
 	}
@@ -141,12 +139,12 @@ func (receiver Song) Update(c *gin.Context) {
 
 	err := receiver.db.Update(song)
 	if err != nil {
-		receiver.logger.Set(c, logging.Error, http.StatusBadRequest, err.Error())
+		set(c, logging.Error, http.StatusBadRequest, err.Error())
 		c.AbortWithStatusJSON(http.StatusBadRequest, models.Error{Message: err.Error()})
 		return
 	}
 
-	receiver.logger.Set(c, logging.Info, http.StatusOK, "")
+	set(c, logging.Info, http.StatusOK, "")
 	c.JSON(http.StatusOK, song)
 }
 
@@ -166,11 +164,11 @@ func (receiver Song) Delete(c *gin.Context) {
 
 	err := receiver.db.Delete(id)
 	if err != nil {
-		receiver.logger.Set(c, logging.Error, http.StatusBadRequest, err.Error())
+		set(c, logging.Error, http.StatusBadRequest, err.Error())
 		c.AbortWithStatusJSON(http.StatusBadRequest, models.Error{Message: err.Error()})
 		return
 	}
 
-	receiver.logger.Set(c, logging.Info, http.StatusNoContent, "")
+	set(c, logging.Info, http.StatusNoContent, "")
 	c.Status(http.StatusNoContent)
 }
