@@ -50,7 +50,8 @@ definitions:
     - release
     - title
     type: object
-  models.Version:
+  Version:
+    description: Version model
     properties:
       version:
         type: string
@@ -228,7 +229,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.Version'
+            $ref: '#/definitions/Version'
         "500":
           description: Internal Server Error
           schema:

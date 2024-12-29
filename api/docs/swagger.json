@@ -269,7 +269,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/models.Version"
+                            "$ref": "#/definitions/Version"
                         }
                     },
                     "500": {
@@ -352,7 +352,8 @@
                 }
             }
         },
-        "models.Version": {
+        "Version": {
+            "description": "Version model",
             "type": "object",
             "properties": {
                 "version": {

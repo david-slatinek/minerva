@@ -273,7 +273,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/models.Version"
+                            "$ref": "#/definitions/Version"
                         }
                     },
                     "500": {
@@ -356,7 +356,8 @@ const docTemplate = `{
                 }
             }
         },
-        "models.Version": {
+        "Version": {
+            "description": "Version model",
             "type": "object",
             "properties": {
                 "version": {
