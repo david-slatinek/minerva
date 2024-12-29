@@ -72,6 +72,9 @@
         groups: docker
         append: true
 
+    - name: Reset ssh connection
+      ansible.builtin.meta: reset_connection
+
     - name: Enable and start Docker services
       ansible.builtin.systemd_service:
         name: "{{ item }}"
