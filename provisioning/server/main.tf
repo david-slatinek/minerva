@@ -55,7 +55,7 @@ data "http" "my_ip" {
 
 resource "aws_vpc_security_group_ingress_rule" "allow_ssh" {
   security_group_id = aws_security_group.security_group.id
-  cidr_ipv4         = "${chomp(data.http.my_ip.response_body)}/32"
+  cidr_ipv4         = "0.0.0.0/0"
   from_port         = 22
   ip_protocol       = "tcp"
   to_port           = 22
