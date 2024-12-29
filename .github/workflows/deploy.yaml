@@ -59,7 +59,7 @@ jobs:
         run: |
           echo "mode: release" >> config/config.docker.yaml
           
-          docker build -t $REGISTRY/$REPOSITORY:latest --build-arg FILE=config.docker .
+          docker build -t $REGISTRY/$REPOSITORY:latest --build-arg FILE=config.docker --build-arg VERSION=${{ github.ref_name }} .
           docker image tag $REGISTRY/$REPOSITORY:latest $REGISTRY/$REPOSITORY:${{ github.ref_name }}
           
           docker push $REGISTRY/$REPOSITORY:latest

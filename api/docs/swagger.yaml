@@ -50,6 +50,11 @@ definitions:
     - release
     - title
     type: object
+  models.Version:
+    properties:
+      version:
+        type: string
+    type: object
 info:
   contact:
     name: David Slatinek
@@ -214,6 +219,23 @@ paths:
       summary: Update song
       tags:
       - song
+  /version:
+    get:
+      description: Get API version.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Version'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/Error'
+      summary: Get API version
+      tags:
+      - version
 produces:
 - application/json
 schemes:

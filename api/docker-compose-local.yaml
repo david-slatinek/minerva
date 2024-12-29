@@ -1,7 +1,6 @@
 services:
   minerva-api:
     build:
-      context: .
       args:
         FILE: config.docker
     container_name: minerva-api
@@ -11,6 +10,7 @@ services:
       - minerva
     environment:
       ENABLE_LOGGING: $ENABLE_LOGGING
+      VERSION: $VERSION
 
 networks:
   minerva:

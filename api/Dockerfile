@@ -21,6 +21,9 @@ COPY --from=build /api/main ./
 RUN mkdir config
 COPY --from=build /api/config/${FILE}.yaml ./config
 
+ARG VERSION
+ENV VERSION=${VERSION}
+
 ENV file=${FILE}
 
 CMD ["sh", "-c", "./main -file ${file}"]

@@ -13,6 +13,7 @@ type Config struct {
 	Mode              string `mapstructure:"mode"`
 	ElasticsearchHost string `mapstructure:"elasticsearch-host"`
 	EnableLogging     bool   `mapstructure:"enable-logging"`
+	Version           string
 }
 
 func NewConfig(filename string) (*Config, error) {
@@ -45,6 +46,8 @@ func (receiver *Config) loadEnv() {
 		log.Println("using ENABLE_LOGGING")
 		receiver.EnableLogging = strings.ToLower(enableLogging) == "true"
 	}
+
+	receiver.Version = os.Getenv("VERSION")
 }
 
 func (receiver *Config) loadConfig(filename string) error {

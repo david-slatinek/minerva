@@ -91,6 +91,11 @@ func main() {
 		healthGroup.GET("/health", controller.NewHealth(db).Check)
 	}
 
+	versionGroup := router.Group("api/v1")
+	{
+		versionGroup.GET("/version", controller.NewVersion(cfg.Version).GetVersion)
+	}
+
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	srv := &http.Server{
