@@ -85,7 +85,11 @@ func main() {
 		baseGroup.PUT("/songs/:id", songController.Update)
 		baseGroup.DELETE("/songs/:id", songController.Delete)
 	}
-	router.GET("/health", controller.NewHealth(db).Check)
+
+	healthGroup := router.Group("api/v1")
+	{
+		healthGroup.GET("/health", controller.NewHealth(db).Check)
+	}
 
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
