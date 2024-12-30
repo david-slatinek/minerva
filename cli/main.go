@@ -8,7 +8,10 @@ import (
 	"time"
 )
 
-const connectionString = "host=localhost user=david password=david dbname=cli port=5000 sslmode=disable TimeZone=Europe/Ljubljana"
+const (
+	connectionString = "host=localhost user=david password=david dbname=cli port=5000 sslmode=disable TimeZone=Europe/Ljubljana"
+	containerName    = "minerva-api"
+)
 
 func configureLog() (func(), error) {
 	f, err := os.OpenFile("measurements.log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
@@ -51,4 +54,16 @@ func main() {
 	}
 
 	fmt.Println(measurement)
+
+	dockerClient, err := NewDocker()
+	if err != nil {
+		log.Fatalf("error creating docker client: %s", err)
+	}
+
+	id, err := dockerClient.GetContainerId(containerName)
+	if err != nil {
+		log.Fatalf("error getting container id: %s", err)
+	}
+
+	fmt.Println(id)
 }
