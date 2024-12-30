@@ -1,0 +1,38 @@
+package main
+
+import (
+	"gorm.io/driver/postgres"
+	"gorm.io/gorm"
+)
+
+type Measurement struct {
+	Id     int
+	Date   string
+	Time   string
+	Status string
+	Mode   int
+}
+
+type MeasurementsTable struct {
+	database *gorm.DB
+}
+
+func NewMeasurements(dsn string) (*MeasurementsTable, error) {
+	db, err := gorm.Open(postgres.Open(dsn))
+	if err != nil {
+		return nil, err
+	}
+	return &MeasurementsTable{database: db}, nil
+}
+
+func (m MeasurementsTable) Close() error {
+	db, err := m.database.DB()
+	if err != nil {
+		return err
+	}
+	return db.Close()
+}
+
+func (m MeasurementsTable) CreateMeasurement(measurement Measurement) (Measurement, error) {
+	return measurement, m.database.Create(&measurement).Error
+}

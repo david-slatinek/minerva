@@ -1,7 +1,7 @@
 services:
   db:
     image: postgres:16.4-alpine3.20
-    restart: always
+    restart: unless-stopped
     hostname: minerva-db
     container_name: minerva-db
     environment:
