@@ -1,0 +1,23 @@
+---
+# Playbook to deploy cli
+
+- name: Deploy cli
+  hosts: all
+
+  tasks:
+    - name: Compile cli
+      ansible.builtin.command: /usr/local/go/bin/go build -o cli .
+      changed_when: true
+      delegate_to: localhost
+
+    - name: Copy cli
+      ansible.builtin.copy:
+        src: cli
+        dest: minerva
+        mode: preserve
+
+    - name: Delete cli
+      ansible.builtin.file:
+        path: cli
+        state: absent
+      delegate_to: localhost
