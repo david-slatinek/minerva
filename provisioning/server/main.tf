@@ -143,11 +143,11 @@ resource "aws_instance" "api" {
   }
 }
 
-resource "aws_eip" "eip" {
-  instance = aws_instance.api.id
-  domain   = "vpc"
+data "aws_eip" "api_eip" {
+  public_ip = var.elastic_ip
+}
 
-  tags = {
-    Name = "${local.name}-ip"
-  }
+resource "aws_eip_association" "api_eip_association" {
+  instance_id   = aws_instance.api.id
+  allocation_id = data.aws_eip.api_eip.id
 }

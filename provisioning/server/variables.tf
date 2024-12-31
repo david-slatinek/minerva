@@ -25,3 +25,8 @@ variable "env" {
     error_message = "Env must be one of the following: 'dev', 'test' or 'prod'."
   }
 }
+
+variable "elastic_ip" {
+  type        = string
+  description = "Already created elastic ip"
+}

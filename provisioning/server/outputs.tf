@@ -10,10 +10,5 @@ output "server_dns" {
 
 output "elastic_ip" {
   description = "Elastic IP address of created server instance"
-  value       = aws_eip.eip.public_ip
-}
-
-output "elastic_dns" {
-  description = "Elastic DNS name assigned to server instance"
-  value       = aws_eip.eip.public_dns
+  value       = aws_eip_association.api_eip_association.public_ip
 }
