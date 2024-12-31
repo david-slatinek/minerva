@@ -13,3 +13,4 @@ networks:
   minerva:
     name: minerva
     driver: bridge
+    external: true

@@ -3,19 +3,12 @@ package main
 import (
 	"context"
 	"flag"
-	"fmt"
 	"io"
 	"log"
 	"os"
 	"os/signal"
 	"syscall"
 	"time"
-)
-
-const (
-	connectionString = "host=localhost user=david password=david dbname=cli port=5000 sslmode=disable TimeZone=Europe/Ljubljana"
-	containerName    = "minerva-api"
-	timeout          = 1
 )
 
 func configureLog() (func(), error) {
@@ -70,12 +63,15 @@ func main() {
 
 	endC := make(chan bool, 1)
 	go dockerClient.Produce(endC)
+	go dockerClient.Stop(endC)
 
 	c := make(chan os.Signal, 1)
 	signal.Notify(c, os.Interrupt, os.Kill, syscall.SIGTERM)
 	<-c
 
 	endC <- true
+	endC <- true
+
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
@@ -84,5 +80,5 @@ func main() {
 		break
 	}
 
-	fmt.Println("shutting down")
+	log.Println("shutting down")
 }
