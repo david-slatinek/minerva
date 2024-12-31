@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"flag"
 	"fmt"
 	"io"
 	"log"
@@ -40,6 +41,13 @@ func main() {
 	}
 	defer closer()
 
+	modePtr := flag.Int("mode", 0, "Monitoring mode: 1, 2, 3")
+	flag.Parse()
+
+	if *modePtr <= 0 || *modePtr > 3 {
+		log.Fatalf("invalid monitoring mode: %d", *modePtr)
+	}
+
 	db, er := NewMeasurements()
 	if er != nil {
 		log.Fatalf("error connecting to database: %s", er)
@@ -50,7 +58,7 @@ func main() {
 		}
 	}()
 
-	dockerClient, err := NewDocker(db)
+	dockerClient, err := NewDocker(db, *modePtr)
 	if err != nil {
 		log.Fatalf("error creating docker client: %s", err)
 	}

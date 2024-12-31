@@ -13,9 +13,10 @@ import (
 type Docker struct {
 	apiClient *client.Client
 	db        *MeasurementsTable
+	mode      int
 }
 
-func NewDocker(db *MeasurementsTable) (*Docker, error) {
+func NewDocker(db *MeasurementsTable, mode int) (*Docker, error) {
 	cli, err := client.NewClientWithOpts(client.FromEnv)
 	if err != nil {
 		return nil, err
@@ -24,6 +25,7 @@ func NewDocker(db *MeasurementsTable) (*Docker, error) {
 	return &Docker{
 		apiClient: cli,
 		db:        db,
+		mode:      mode,
 	}, nil
 }
 
@@ -74,7 +76,7 @@ func (d *Docker) write(timestamp time.Time) time.Time {
 		Date:   time.Now().Format("2006-01-02"),
 		Time:   time.Now().Format("15:04:05"),
 		Status: state,
-		Mode:   1,
+		Mode:   d.mode,
 	})
 	if err != nil {
 		log.Printf("error creating measurement: %s", err)
