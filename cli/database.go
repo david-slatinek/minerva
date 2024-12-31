@@ -17,8 +17,8 @@ type MeasurementsTable struct {
 	database *gorm.DB
 }
 
-func NewMeasurements(dsn string) (*MeasurementsTable, error) {
-	db, err := gorm.Open(postgres.Open(dsn))
+func NewMeasurements() (*MeasurementsTable, error) {
+	db, err := gorm.Open(postgres.Open(connectionString))
 	if err != nil {
 		return nil, err
 	}

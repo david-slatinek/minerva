@@ -28,4 +28,4 @@ ENV file=${FILE}
 
 CMD ["sh", "-c", "./main -file ${file}"]
 
-HEALTHCHECK --interval=10s --timeout=5s --retries=3 CMD curl -f http://localhost:8080/health
+HEALTHCHECK --interval=10s --timeout=5s --retries=3 CMD curl -f http://localhost:8080/api/v1/health

@@ -13,7 +13,7 @@ services:
       - cli-db:/var/lib/postgresql/data
       - ./create.sql:/docker-entrypoint-initdb.d/create.sql
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready", "-d", "measurements" ]
+      test: [ "CMD-SHELL", "pg_isready -d $${POSTGRES_DB} -U $${POSTGRES_USER}" ]
       interval: 10s
       timeout: 20s
       retries: 5

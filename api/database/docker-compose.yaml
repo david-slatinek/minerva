@@ -16,7 +16,7 @@ services:
     networks:
       - minerva
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready", "-d", "songs" ]
+      test: [ "CMD-SHELL", "pg_isready -d $${POSTGRES_DB} -U $${POSTGRES_USER}" ]
       interval: 10s
       timeout: 20s
       retries: 5
