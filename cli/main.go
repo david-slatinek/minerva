@@ -76,11 +76,11 @@ func main() {
 	<-c
 
 	endC <- true
-	ctx2, cancel2 := context.WithTimeout(context.Background(), 5*time.Second)
-	defer cancel2()
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
 
 	select {
-	case <-ctx2.Done():
+	case <-ctx.Done():
 		break
 	}
 
