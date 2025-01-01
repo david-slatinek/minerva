@@ -8,11 +8,12 @@ import (
 const connectionString = "host=localhost user=david password=david dbname=cli port=5000 sslmode=disable TimeZone=Europe/Ljubljana"
 
 type Measurement struct {
-	Id     int
-	Date   string
-	Time   string
-	Status string
-	Mode   int
+	Id        int
+	Date      string
+	Time      string
+	StatusApi string
+	StatusDb  string
+	Mode      int
 }
 
 type MeasurementsTable struct {

@@ -66,13 +66,15 @@ func main() {
 
 	endC := make(chan bool, 1)
 	go dockerClient.Produce(endC)
-	go dockerClient.Stop(endC)
+	go dockerClient.Stop(endC, docker.ApiContainer)
+	go dockerClient.Stop(endC, docker.DbContainer)
 	go new(performance.Testing).Start(endC)
 
 	c := make(chan os.Signal, 1)
 	signal.Notify(c, os.Interrupt, os.Kill, syscall.SIGTERM)
 	<-c
 
+	endC <- true
 	endC <- true
 	endC <- true
 	endC <- true

@@ -9,8 +9,8 @@ import (
 )
 
 const (
-	minMinutes = 1
-	maxMinutes = 2
+	minMinutes = 20
+	maxMinutes = 25
 )
 
 type Testing struct {
