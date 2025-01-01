@@ -74,10 +74,9 @@ func main() {
 	signal.Notify(c, os.Interrupt, os.Kill, syscall.SIGTERM)
 	<-c
 
-	endC <- true
-	endC <- true
-	endC <- true
-	endC <- true
+	for i := 0; i < 4; i++ {
+		endC <- true
+	}
 
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
