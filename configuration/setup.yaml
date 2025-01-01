@@ -19,7 +19,7 @@
         cache_valid_time: 3600
         clean: true
         update_cache: true
-        upgrade: "full"
+        upgrade: full
 
     - name: Install required packages
       become: true
@@ -115,6 +115,27 @@
         cmd: aws ecr get-login-password | docker login --username AWS --password-stdin "{{ repository }}"
       changed_when: true
 
+    - name: Download k6
+      ansible.builtin.get_url:
+        url: https://github.com/grafana/k6/releases/download/v0.55.2/k6-v0.55.2-linux-amd64.tar.gz
+        dest: "{{ path }}"
+        mode: "0744"
+        checksum: sha256:d9a91fcee7eb70193324a53c9cc142a359c63b63eeb6b8a050f13d9fa442c5ee
+
+    - name: Extract k6
+      ansible.builtin.unarchive:
+        src: "{{ path }}/k6-v0.55.2-linux-amd64.tar.gz"
+        dest: "{{ path }}"
+        remote_src: true
+
+    - name: Copy k6 to /bin
+      become: true
+      ansible.builtin.copy:
+        src: "{{ path }}/k6-v0.55.2-linux-amd64/k6"
+        dest: /usr/local/bin
+        mode: preserve
+        remote_src: true
+
     - name: Delete files
       ansible.builtin.file:
         path: "{{ item }}"
@@ -122,3 +143,5 @@
       loop:
         - cli.zip
         - awscli-bundle
+        - k6-v0.55.2-linux-amd64.tar.gz
+        - k6-v0.55.2-linux-amd64

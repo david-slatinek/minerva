@@ -14,8 +14,8 @@
         dest: "{{ path }}/"
         mode: preserve
       loop:
-        - "docker-compose.yaml"
-        - ".env"
+        - docker-compose.yaml
+        - .env
 
     - name: Tear down monitoring
       community.docker.docker_compose_v2:

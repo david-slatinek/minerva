@@ -5,19 +5,39 @@
   hosts: all
 
   tasks:
+    - name: Create cli directory
+      ansible.builtin.file:
+        path: cli
+        state: directory
+        mode: "0755"
+
     - name: Compile cli
       ansible.builtin.command: /usr/local/go/bin/go build -o cli .
       changed_when: true
       delegate_to: localhost
 
-    - name: Copy cli
+    - name: Copy cli files
       ansible.builtin.copy:
-        src: cli
-        dest: minerva
+        src: "{{ item }}"
+        dest: cli
         mode: preserve
+      loop:
+        - cli
+        - docker-compose.yaml
+        - create.sql
+        - "{{ playbook_dir }}/../api/stress-test.js"
 
     - name: Delete cli
       ansible.builtin.file:
         path: cli
         state: absent
       delegate_to: localhost
+
+    - name: Tear down db
+      community.docker.docker_compose_v2:
+        project_src: cli
+        state: absent
+
+    - name: Create and start db service
+      community.docker.docker_compose_v2:
+        project_src: cli

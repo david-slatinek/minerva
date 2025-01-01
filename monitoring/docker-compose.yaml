@@ -54,7 +54,7 @@ services:
     deploy:
       resources:
         limits:
-          memory: 8G
+          memory: 6G
 
   index-creator:
     image: curlimages/curl:8.10.1
