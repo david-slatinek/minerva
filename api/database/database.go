@@ -71,7 +71,7 @@ func (receiver Song) Ping() error {
 		return err
 	}
 
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 300*time.Millisecond)
 	defer cancel()
 
 	return db.PingContext(ctx)
