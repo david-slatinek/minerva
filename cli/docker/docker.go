@@ -1,4 +1,4 @@
-package main
+package docker
 
 import (
 	"context"
@@ -7,12 +7,13 @@ import (
 	"github.com/docker/docker/api/types/filters"
 	"github.com/docker/docker/client"
 	"log"
-	"math/rand/v2"
+	"main/database"
+	"main/random"
 	"time"
 )
 
 const (
-	timeout       = 5
+	writeTimeout  = 5
 	containerName = "minerva-api"
 	minMinutes    = 10
 	maxMinutes    = 15
@@ -20,11 +21,11 @@ const (
 
 type Docker struct {
 	apiClient *client.Client
-	db        *MeasurementsTable
+	db        *database.MeasurementsTable
 	mode      int
 }
 
-func NewDocker(db *MeasurementsTable, mode int) (*Docker, error) {
+func NewDocker(db *database.MeasurementsTable, mode int) (*Docker, error) {
 	cli, err := client.NewClientWithOpts(client.FromEnv)
 	if err != nil {
 		return nil, err
@@ -37,7 +38,7 @@ func NewDocker(db *MeasurementsTable, mode int) (*Docker, error) {
 	}, nil
 }
 
-func (d *Docker) getContainerInfo() (string, string, error) {
+func (d Docker) getContainerInfo() (string, string, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
 
@@ -56,7 +57,7 @@ func (d *Docker) getContainerInfo() (string, string, error) {
 	return containers[0].ID, containers[0].State, nil
 }
 
-func (d *Docker) Produce(c chan bool) {
+func (d Docker) Produce(c chan bool) {
 	timestamp := time.Now()
 
 	for {
@@ -70,8 +71,8 @@ func (d *Docker) Produce(c chan bool) {
 	}
 }
 
-func (d *Docker) write(timestamp time.Time) time.Time {
-	if time.Now().Sub(timestamp).Seconds() < timeout {
+func (d Docker) write(timestamp time.Time) time.Time {
+	if time.Now().Sub(timestamp).Seconds() < writeTimeout {
 		return timestamp
 	}
 
@@ -81,7 +82,7 @@ func (d *Docker) write(timestamp time.Time) time.Time {
 		state = "error"
 	}
 
-	_, err = d.db.CreateMeasurement(Measurement{
+	_, err = d.db.CreateMeasurement(database.Measurement{
 		Date:   time.Now().Format("2006-01-02"),
 		Time:   time.Now().Format("15:04:05"),
 		Status: state,
@@ -94,17 +95,13 @@ func (d *Docker) write(timestamp time.Time) time.Time {
 	return time.Now()
 }
 
-func (d *Docker) Close() error {
+func (d Docker) Close() error {
 	return d.apiClient.Close()
 }
 
-func random() int {
-	return rand.IntN(maxMinutes+1-minMinutes) + minMinutes
-}
-
-func (d *Docker) Stop(c chan bool) {
+func (d Docker) Stop(c chan bool) {
 	timestamp := time.Now()
-	stopMinutes := random()
+	stopMinutes := random.Int(minMinutes, maxMinutes)
 
 	for {
 		select {
@@ -114,17 +111,19 @@ func (d *Docker) Stop(c chan bool) {
 		default:
 			if (int)(time.Now().Sub(timestamp).Minutes()) >= stopMinutes {
 				timestamp = time.Now()
-				stopMinutes = random()
+				stopMinutes = random.Int(minMinutes, maxMinutes)
 
 				if err := d.stop(); err == nil {
 					log.Println("stop successful")
+				} else {
+					log.Printf("error with stop: %s", err)
 				}
 			}
 		}
 	}
 }
 
-func (d *Docker) stop() error {
+func (d Docker) stop() error {
 	id, _, err := d.getContainerInfo()
 
 	if err != nil {
@@ -136,8 +135,7 @@ func (d *Docker) stop() error {
 
 	err = d.apiClient.ContainerStop(ctx, id, container.StopOptions{})
 	if err != nil {
-		log.Printf("error stopping container: %s", err)
-		return err
+		return fmt.Errorf("error stopping container: %s", err)
 	}
 
 	ctx, cancel = context.WithTimeout(context.Background(), 5*time.Second)
@@ -146,6 +144,7 @@ func (d *Docker) stop() error {
 	err = d.apiClient.ContainerRemove(ctx, id, container.RemoveOptions{})
 	if err != nil {
 		log.Printf("error removing container: %s", err)
+		return fmt.Errorf("error removing container: %s", err)
 	}
 
 	return nil
