@@ -81,7 +81,7 @@ resource "aws_vpc_security_group_ingress_rule" "allow_http" {
   }
 }
 
-resource "aws_vpc_security_group_ingress_rule" "allow_postgres" {
+resource "aws_vpc_security_group_ingress_rule" "allow_api_postgres" {
   security_group_id = aws_security_group.security_group.id
   cidr_ipv4         = "${chomp(data.http.my_ip.response_body)}/32"
   from_port         = 5432
@@ -89,7 +89,21 @@ resource "aws_vpc_security_group_ingress_rule" "allow_postgres" {
   to_port           = 5432
 
   tags = {
-    Name        = "${local.name}-postgres"
+    Name        = "${local.name}-api-postgres"
+    Protocol    = "postgres"
+    Environment = var.env
+  }
+}
+
+resource "aws_vpc_security_group_ingress_rule" "allow_cli_postgres" {
+  security_group_id = aws_security_group.security_group.id
+  cidr_ipv4         = "${chomp(data.http.my_ip.response_body)}/32"
+  from_port         = 5000
+  ip_protocol       = "tcp"
+  to_port           = 5000
+
+  tags = {
+    Name        = "${local.name}-cli-postgres"
     Protocol    = "postgres"
     Environment = var.env
   }
@@ -130,7 +144,7 @@ resource "aws_instance" "api" {
   vpc_security_group_ids = [aws_security_group.security_group.id]
 
   root_block_device {
-    volume_size = 10
+    volume_size = 30
     tags = {
       Name        = "${local.name}-storage"
       Environment = var.env
@@ -145,6 +159,10 @@ resource "aws_instance" "api" {
 
 data "aws_eip" "api_eip" {
   public_ip = var.elastic_ip
+
+  tags = {
+    Name = "${local.name}-eip"
+  }
 }
 
 resource "aws_eip_association" "api_eip_association" {

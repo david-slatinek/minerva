@@ -1,5 +1,5 @@
 output "server_ip" {
-  description = "Public IP address of created server instance"
+  description = "Public IP address of the created server instance"
   value       = aws_instance.api.public_ip
 }
 
@@ -9,6 +9,6 @@ output "server_dns" {
 }
 
 output "elastic_ip" {
-  description = "Elastic IP address of created server instance"
+  description = "Elastic IP address of the created server instance"
   value       = aws_eip_association.api_eip_association.public_ip
 }
