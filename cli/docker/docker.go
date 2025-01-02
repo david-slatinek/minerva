@@ -23,7 +23,7 @@ const (
 	dbMinMinutes               = 30
 	dbMaxMinutes               = 40
 
-	writeTimeout = 5
+	writeTimeout = 10
 )
 
 type Docker struct {
