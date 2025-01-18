@@ -5,6 +5,8 @@ import (
 	"errors"
 	"flag"
 	"github.com/gin-gonic/gin"
+	"github.com/newrelic/go-agent/v3/integrations/nrgin"
+	"github.com/newrelic/go-agent/v3/newrelic"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 	"log"
@@ -73,6 +75,22 @@ func main() {
 		}
 	} else {
 		log.Println("skipping logging")
+	}
+
+	if cfg.NewRelicKey != "" {
+		app, err := newrelic.NewApplication(
+			newrelic.ConfigAppName("minerva"),
+			newrelic.ConfigLicense(cfg.NewRelicKey),
+			newrelic.ConfigAppLogForwardingEnabled(true),
+		)
+
+		if err == nil {
+			router.Use(nrgin.Middleware(app))
+		} else {
+			log.Printf("error creating newrelic app: %v\n", err)
+		}
+	} else {
+		log.Println("skipping newrelic integration")
 	}
 
 	songController := controller.NewSong(db)

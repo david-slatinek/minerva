@@ -14,6 +14,7 @@ type Config struct {
 	ElasticsearchHost string `mapstructure:"elasticsearch-host"`
 	EnableLogging     bool   `mapstructure:"enable-logging"`
 	Version           string
+	NewRelicKey       string `mapstructure:"newrelic-key"`
 }
 
 func NewConfig(filename string) (*Config, error) {
@@ -48,6 +49,12 @@ func (receiver *Config) loadEnv() {
 	}
 
 	receiver.Version = os.Getenv("VERSION")
+
+	newRelicKey := os.Getenv("NEW_RELIC_KEY")
+	if newRelicKey != "" {
+		log.Println("using NEW_RELIC_KEY")
+		receiver.NewRelicKey = newRelicKey
+	}
 }
 
 func (receiver *Config) loadConfig(filename string) error {

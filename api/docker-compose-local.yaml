@@ -11,6 +11,7 @@ services:
     environment:
       ENABLE_LOGGING: $ENABLE_LOGGING
       VERSION: $VERSION
+      NEW_RELIC_KEY: $NEW_RELIC_KEY
 
 networks:
   minerva:

@@ -8,6 +8,7 @@ services:
       - minerva
     environment:
       ENABLE_LOGGING: $ENABLE_LOGGING
+      NEW_RELIC_KEY: $NEW_RELIC_KEY
 
 networks:
   minerva:
