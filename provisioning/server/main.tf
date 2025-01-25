@@ -151,7 +151,9 @@ resource "aws_vpc_security_group_egress_rule" "allow_all_traffic_ipv4" {
 
 resource "aws_instance" "api" {
   ami                         = data.aws_ami.debian.id
+  # instance_type               = "t3.xlarge"
   instance_type               = "t3.medium"
+  # instance_type               = "t3.small"
   associate_public_ip_address = true
   key_name                    = aws_key_pair.key_pair.key_name
 
