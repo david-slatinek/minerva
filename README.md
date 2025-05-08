@@ -17,10 +17,10 @@ Song management project as a part of my master thesis, made of:
 - [provisioning](provisioning) with Terraform for AWS;
 - [configuration](configuration) with Ansible;
 - [API](api) for song management, made with Go and PostgreSQL;
-- [cli](cli) app, that randomly stops Docker containers as part of chaos engineering;
+- [cli](cli) app that randomly stops Docker containers as part of chaos engineering;
 - [monitoring](monitoring) with Netdata, ElasticSearch and New Relic;
 - [incident](incident) management with IRIS and PagerDuty.
 
 # Further reading
 
-This project is a part of my thesis. The entire document is available [here]().
+This project is a part of my master thesis. The entire document is available [here](https://dk.um.si/IzpisGradiva.php?id=92232&lang=slv).
